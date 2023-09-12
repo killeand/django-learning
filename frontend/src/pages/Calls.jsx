@@ -5,7 +5,7 @@ export default function Page() {
     const [alpha, setAlpha] = useState("");
 
     function RunAlpha() {
-        axios.get("/api")
+        axios.get("/api", { headers: { "Cache-Control": "no-cache"}})
             .then(({ data }) => {
                 setAlpha(data);
             })

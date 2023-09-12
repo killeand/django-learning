@@ -7,6 +7,7 @@ django-filter
 djangorestframework
 djangorestframework-simplejwt
 filelock
+markdown
 pipenv
 platformdirs
 pyjwt

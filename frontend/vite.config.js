@@ -14,7 +14,17 @@ export default defineConfig({
 				secure: false,
 				target: "http://127.0.0.1:8000/",
 				changeOrigin: true
-			}
+            },
+            '/api-auth': {
+                secure: false,
+				target: "http://127.0.0.1:8000/",
+				changeOrigin: true
+            },
+            '/static': {
+                secure: false,
+				target: "http://127.0.0.1:8000/",
+				changeOrigin: true
+            }
 		}
     },
     resolve: {
