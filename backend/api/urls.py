@@ -1,7 +1,6 @@
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-from . import fourohfour
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -17,5 +16,4 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', fourohfour.page),
 ]
