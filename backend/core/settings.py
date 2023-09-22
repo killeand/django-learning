@@ -25,8 +25,13 @@ SITE_ID = env("SITE_ID")
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
-
+    'api',
+    'models',
+    'serializers',
+    
+    # Enable admin site
+    # Requires .auth, .contenttypes, .sessions, and .messages
+    'django.contrib.admin',
     # django.contrib.auth
     # Provides the basics of an auth system including models for User,
     # Permission, and Groups. It also provides everything in between.
@@ -68,6 +73,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        }
     },
 ]
 
@@ -114,6 +126,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'models.User'
 
 
 # Static files (CSS, JavaScript, Images)

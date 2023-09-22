@@ -12,6 +12,7 @@ markdown
 pipenv
 platformdirs
 pyjwt
+python-ulid
 pytz
 setuptools
 sqlparse
