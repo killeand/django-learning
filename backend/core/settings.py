@@ -25,9 +25,7 @@ SITE_ID = env("SITE_ID")
 # Application definition
 
 INSTALLED_APPS = [
-    'api',
-    'models',
-    'serializers',
+    'users',
     
     # Enable admin site
     # Requires .auth, .contenttypes, .sessions, and .messages
@@ -127,8 +125,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'models.User'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -170,3 +166,5 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES,
 }
+
+AUTH_USER_MODEL = 'users.UserModel'

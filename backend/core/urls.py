@@ -1,5 +1,5 @@
 from django.urls import include, path
-from django.contrib.auth import views
+#from django.contrib.auth import views
 from django.contrib.admin import site
 from . import views
 
@@ -10,7 +10,8 @@ from . import views
 handler404 = 'core.views.FourOhFour'
 
 urlpatterns = [
-    path('api/', include('api.urls')),
+    path('api/users/', include('users.urls')),
+    path('api/', views.FourOhFour, name="404"),
     path('admin/', site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', views.Index, name="Home"),
