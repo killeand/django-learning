@@ -1,12 +1,19 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django_ulid.models import default, ULIDField
+import uuid
+from .managers import UserManager
 
 class UserModel(AbstractUser):
-    def __str__():
-        return "User"
+    def __str__(self):
+        return self.email
     
-    id = ULIDField(default=default, primary_key=True, editable=False, max_length=32)
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    email = models.CharField(max_length=254, unique=True)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [ 'password' ]
+    
+    objects = UserManager()
     
     class Meta:
         db_table = "Users"

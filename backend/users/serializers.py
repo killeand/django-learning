@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from django_ulid.serializers import ULIDField
 
 class UserSerializer(serializers.Serializer):
-    id = ULIDField()
+    id = serializers.UUIDField()
     username = serializers.CharField(max_length=150, required=True)
     password = serializers.CharField(max_length=128, required=True)
     email = serializers.CharField(max_length=254, required=True)
