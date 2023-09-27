@@ -17,4 +17,6 @@ class UserModel(AbstractUser):
     
     class Meta:
         db_table = "Users"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
     

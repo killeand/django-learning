@@ -1,8 +1,8 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField()
-    username = serializers.CharField(max_length=150, required=True)
     password = serializers.CharField(max_length=128, required=True)
     email = serializers.CharField(max_length=254, required=True)
     first_name = serializers.CharField(max_length=150, required=True)
@@ -11,4 +11,8 @@ class UserSerializer(serializers.Serializer):
     last_login = serializers.DateTimeField()
     is_active = serializers.BooleanField()
     is_staff = serializers.BooleanField()
-    is_superuser = serializers.BaseSerializer()
+    is_superuser = serializers.BooleanField()
+    
+    class Meta:
+        model = get_user_model()
+        exclude = [ 'username' ]

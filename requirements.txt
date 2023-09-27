@@ -5,6 +5,7 @@ Django
 django-cors-headers
 django-environ
 django-filter
+django-ulid
 djangorestframework
 djangorestframework-simplejwt
 filelock
@@ -17,5 +18,6 @@ pytz
 setuptools
 sqlparse
 tzdata
+uuid
 virtualenv
 virtualenv-clone

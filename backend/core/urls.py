@@ -1,6 +1,6 @@
 from django.urls import include, path
-#from django.contrib.auth import views
 from django.contrib.admin import site
+from django.conf import settings
 from . import views
 
 # NOTE TO SELF that re_path takes precedence over path
@@ -10,9 +10,15 @@ from . import views
 handler404 = 'core.views.FourOhFour'
 
 urlpatterns = [
-    path('api/', include('users.urls')),
-    path('api/', views.FourOhFour, name="404"),
-    path('admin/', site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('', views.Index, name="Home"),
+    path('api/', include('users.urls'))
+]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('admin/', site.urls),
+        path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    ]
+
+urlpatterns += [
+    path('', views.Index, name='home')
 ]
