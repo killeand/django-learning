@@ -4,11 +4,13 @@ from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, LimitedUserSerializer
 
 class UserPermission(BasePermission):
+    # based on list call
     def has_permission(self, request, view):
         print(view.action)
         print(request.user)
         return True
     
+    # based on all other types of calls
     def has_object_permission(self, request, view, obj):
         print(dir(obj))
         return True
