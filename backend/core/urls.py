@@ -1,6 +1,7 @@
 from django.urls import include, path
 from django.contrib.admin import site
 from django.conf import settings
+from rest_framework_simplejwt import views as jwt_views
 from . import views
 
 # NOTE TO SELF that re_path takes precedence over path
@@ -10,7 +11,9 @@ from . import views
 handler404 = 'core.views.FourOhFour'
 
 urlpatterns = [
-    path('api/', include('users.urls'))
+    path('api/', include('users.urls')),
+    path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh')
 ]
 
 if settings.DEBUG:

@@ -1,5 +1,6 @@
 import environ
 from pathlib import Path
+from datetime import timedelta
 
 # Setup env loader, and interpret DEBUG as a boolean
 env = environ.Env(DEBUG=(bool, False),SITE_ID=(int, 1))
@@ -27,30 +28,18 @@ SITE_ID = env("SITE_ID")
 INSTALLED_APPS = [
     'users',
     
-    # Enable admin site
-    # Requires .auth, .contenttypes, .sessions, and .messages
     'django.contrib.admin',
-    # django.contrib.auth
-    # Provides the basics of an auth system including models for User,
-    # Permission, and Groups. It also provides everything in between.
-    # * auth_group
-    # * auth_group_permissions
-    # * auth_permissions
-    # * auth_user
-    # * auth_user_groups
-    # * auth_user_user_permissions
     'django.contrib.auth', 
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # django-cors-headers
+    
     'corsheaders',
-    # django-filters
     'django_filters',
-    # djangorestframework
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -157,13 +146,19 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.DjangoModelPermissions'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES,
 }
 
 AUTH_USER_MODEL = 'users.UserModel'
+
+#restframework_simplejwt
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "UPDATE_LAST_LOGIN": True,
+}

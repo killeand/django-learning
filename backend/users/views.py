@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, LimitedUserSerializer
 
@@ -18,7 +18,7 @@ class UserPermission(BasePermission):
 class UserView(ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-    permission_classes = [UserPermission]
+    permission_classes = [IsAuthenticated]
     
 class LimitedUserView(ModelViewSet):
     #queryset = get_user_model().objects.filter(is_staff=True)
