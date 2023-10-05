@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Axios } from '@/scripts/Axios';
+import Text from '@/components/Text';
 
 export default function Page() {
-    const [alpha, setAlpha] = useState("");
+    const [output, setOutput] = useState("");
 
     function RunGet(url, setter, errsetter) {
         Axios.get(url)
@@ -24,17 +25,22 @@ export default function Page() {
     return (
         <>
             <h1>API Calls</h1>
-            <div className="border border-red-800 p-2 flex flex-col items-stretch">
-                <h1>Login</h1>
-                <div>Credentials: {(TokenExists() ? "Set" : "Unset")}</div>
-                <div className="grid grid-cols-8">
-                    
+            <div className="flex flex-col space-y-2">
+                {output && (
+                    <div className="alert alert-info"><pre>{JSON.stringify(output, null, '\t')}</pre></div>
+                )}
+                <div className="border border-red-800 p-2 flex flex-col items-stretch">
+                    <h2>Login</h2>
+                    <div>Credentials: {(TokenExists() ? "Set" : "Unset")}</div>
+                    <Text title="Username" />
                 </div>
-            </div>
-            <div className="border border-red-800 p-2 flex flex-col items-stretch">
-                <div className="border-b-2 border-black pb-2 mb-2"><pre>{JSON.stringify(alpha, null, '\t')}</pre></div>
-                <button className="btn btn-primary" onClick={() => RunGet("/api", setAlpha, setAlpha)}>GET /api</button>
-                <button className="btn btn-primary" onClick={()=>RunGet("/api/users", setAlpha, setAlpha)}>GET /api/users</button>
+                <div className="border border-red-800 p-2 flex flex-col items-stretch">
+                    <h2>GET</h2>
+                    <div className="flex flex-col join join-vertical">
+                        <button className="btn btn-primary join-item" onClick={() => RunGet("/api", setOutput, setOutput)}>GET /api</button>
+                        <button className="btn btn-primary join-item" onClick={() => RunGet("/api/users", setOutput, setOutput)}>GET /api/users</button>
+                    </div>
+                </div>
             </div>
         </>
     );

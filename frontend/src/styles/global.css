@@ -10,14 +10,24 @@ html, body, #root {
     @apply flex flex-col p-2;
 }
 
-nav {
-    @apply flex flex-row space-x-3;
-}
-
 a {
     @apply text-blue-600 hover:underline;
 }
 
 h1 {
+    @apply text-xl font-bold;
+}
+
+h2 {
     @apply text-lg font-bold;
+}
+
+.lg-title {
+    @apply text-xs md:text-sm lg:text-base xl:text-lg font-bold;
+    line-height: 1.25rem;
+}
+
+.xl-title {
+    @apply text-sm md:text-base lg:text-lg xl:text-xl font-bold;
+    line-height: 1.5rem;
 }

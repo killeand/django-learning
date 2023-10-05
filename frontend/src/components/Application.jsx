@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import Calls from '@/pages/Calls';
+import Button from "./Button";
 
 export default function Application() {
     const URLS = [
@@ -11,13 +12,13 @@ export default function Application() {
 
     return (
         <BrowserRouter>
-            <header>
-                <nav>
+            <header className="flex">
+                <nav className="flex flex-row flex-grow items-stretch join">
                     {URLS.map((item, index) => {
                         if (item.component == null)
-                            return <a key={`nav-${index}-${item.name}`} href={item.path}>{item.name}</a>
+                            return <Button key={`nav-${index}-${item.name}`} as="a" color="secondary" href={item.path} className="join-item flex-grow">{item.name}</Button>
                         
-                        return <Link key={`nav-${index}-${item.name}`} to={item.path}>{item.name}</Link>
+                        return <Button key={`nav-${index}-${item.name}`} as={Link} color="secondary" to={item.path} className="join-item flex-grow">{item.name}</Button>
                     })}
                 </nav>
             </header>

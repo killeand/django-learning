@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     'corsheaders',
-    'django_filters',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
