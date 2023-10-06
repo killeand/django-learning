@@ -1,9 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Axios } from '@/scripts/Axios';
 import Text from '@/components/Text';
+import Accordian from '@/components/Accordian';
+import Label from '@/components/Label';
+import Button from '@/components/Button';
 
 export default function Page() {
     const [output, setOutput] = useState("");
+    const [creds, setCreds] = useState(false);
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
+
+    useEffect(() => {
+        let authtoken = localStorage.getItem("TEST-AUTH");
+        let reftoken = localStorage.getItem("TEST-REFRESH");
+
+        setCreds(authtoken != null && reftoken != null);
+    }, []);
 
     function RunGet(url, setter, errsetter) {
         Axios.get(url)
@@ -15,11 +28,21 @@ export default function Page() {
             });
     }
 
-    function TokenExists() {
-        let authtoken = localStorage.getItem("TEST-AUTH");
-        let reftoken = localStorage.getItem("TEST-REFRESH");
+    function Login() {
+        Axios.post("/api/token", {email:email,password:pass})
+            .then(({ data }) => {
+                if (data.access) localStorage.setItem("TEST-AUTH", data.access);
+                if (data.refresh) localStorage.setItem("TEST-REFRESH", data.refresh);
 
-        return (authtoken != null && reftoken != null);
+                let authtoken = localStorage.getItem("TEST-AUTH");
+                let reftoken = localStorage.getItem("TEST-REFRESH");
+
+                setCreds(authtoken != null && reftoken != null);
+                setOutput({ login: "Successful" });
+            })
+            .catch(({ response: error }) => {
+                setOutput(error.data);
+            })
     }
 
     return (
@@ -29,18 +52,15 @@ export default function Page() {
                 {output && (
                     <div className="alert alert-info"><pre>{JSON.stringify(output, null, '\t')}</pre></div>
                 )}
-                <div className="border border-red-800 p-2 flex flex-col items-stretch">
-                    <h2>Login</h2>
-                    <div>Credentials: {(TokenExists() ? "Set" : "Unset")}</div>
-                    <Text title="Username" />
-                </div>
-                <div className="border border-red-800 p-2 flex flex-col items-stretch">
-                    <h2>GET</h2>
-                    <div className="flex flex-col join join-vertical">
-                        <button className="btn btn-primary join-item" onClick={() => RunGet("/api", setOutput, setOutput)}>GET /api</button>
-                        <button className="btn btn-primary join-item" onClick={() => RunGet("/api/users", setOutput, setOutput)}>GET /api/users</button>
-                    </div>
-                </div>
+                <Accordian color="warning" title="Login" titleElements={(<Label title="Credentials" value={(creds ? "Set" : "Unset")} />)}>
+                    <Text title="Email" placeholder="Please enter an email address..." value={email} onChange={(retval) => setEmail(retval)} />
+                    <Text password title="Password" placeholder="Please enter a password..." value={pass} onChange={(retval) => setPass(retval)} />
+                    <Button onClick={Login}>Login</Button>
+                </Accordian>
+                <Accordian color="warning" title="GET">
+                    <Button onClick={() => RunGet("/api", setOutput, setOutput)}>GET /api</Button>
+                    <Button onClick={() => RunGet("/api/users", setOutput, setOutput)}>GET /api/users</Button>
+                </Accordian>
             </div>
         </>
     );
