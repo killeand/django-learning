@@ -1,3 +1,15 @@
+export function TokensExist() {
+    let authtoken = localStorage.getItem("TEST-AUTH");
+    let reftoken = localStorage.getItem("TEST-REFRESH");
+
+    return (authtoken != null && reftoken != null);
+}
+
+export function ClearTokens() {
+    localStorage.removeItem("TEST-AUTH");
+    localStorage.removeItem("TEST-REFRESH");
+}
+
 export const BTNCOLORS = {
     neutral: "btn-neutral",
     primary: "btn-primary",

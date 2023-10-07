@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Axios } from '@/scripts/Axios';
+import { TokensExist, ClearTokens } from '@/scripts/Utilities';
 import Text from '@/components/Text';
 import Accordian from '@/components/Accordian';
 import Label from '@/components/Label';
@@ -12,10 +13,7 @@ export default function Page() {
     const [pass, setPass] = useState("");
 
     useEffect(() => {
-        let authtoken = localStorage.getItem("TEST-AUTH");
-        let reftoken = localStorage.getItem("TEST-REFRESH");
-
-        setCreds(authtoken != null && reftoken != null);
+        setCreds(TokensExist());
     }, []);
 
     function RunGet(url, setter, errsetter) {
@@ -23,7 +21,7 @@ export default function Page() {
             .then(({ data }) => {
                 setter(data);
             })
-            .catch(({response:error}) => {
+            .catch(({ response: error}) => {
                 errsetter(error.data);
             });
     }
@@ -34,15 +32,17 @@ export default function Page() {
                 if (data.access) localStorage.setItem("TEST-AUTH", data.access);
                 if (data.refresh) localStorage.setItem("TEST-REFRESH", data.refresh);
 
-                let authtoken = localStorage.getItem("TEST-AUTH");
-                let reftoken = localStorage.getItem("TEST-REFRESH");
-
-                setCreds(authtoken != null && reftoken != null);
+                setCreds(TokensExist());
                 setOutput({ login: "Successful" });
             })
             .catch(({ response: error }) => {
                 setOutput(error.data);
             })
+    }
+
+    function Logout() {
+        ClearTokens();
+        setCreds(TokensExist());
     }
 
     return (
@@ -56,6 +56,7 @@ export default function Page() {
                     <Text title="Email" placeholder="Please enter an email address..." value={email} onChange={(retval) => setEmail(retval)} />
                     <Text password title="Password" placeholder="Please enter a password..." value={pass} onChange={(retval) => setPass(retval)} />
                     <Button onClick={Login}>Login</Button>
+                    <Button onClick={Logout}>Logout</Button>
                 </Accordian>
                 <Accordian color="warning" title="GET">
                     <Button onClick={() => RunGet("/api", setOutput, setOutput)}>GET /api</Button>
