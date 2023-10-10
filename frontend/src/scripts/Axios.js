@@ -3,8 +3,10 @@ import _ from 'lodash';
 import { TokensExist, ClearTokens } from './Utilities';
 
 function IsTokenError(error) {
-    if (_.has(error, "response.status") && _.has(error, "response.data.code")) {
-        return (error.response.data.code === "token_not_valid");
+    if (_.has(error, "response.data.code")) {
+        if (_.has(error, "response.data.messages")) {
+            return (error.response.data.code === "token_not_valid" && error.response.data.messages[0].token_type === "access");
+        }
     }
 
     return false;
@@ -42,7 +44,8 @@ function AxiosClient() {
                 }
                 catch (refresh_error) {
                     ClearTokens();
-                    return Promise.reject(refresh_error);
+                    location.href = `/login?redirect=${encodeURI(location.pathname)}`;
+                    //return Promise.reject(refresh_error);
                 }
 
                 if (_.has(retval, "data.access")) {

@@ -10,6 +10,10 @@ html, body, #root {
     @apply flex flex-col p-2;
 }
 
+main {
+    @apply flex flex-col flex-grow;
+}
+
 a {
     @apply text-blue-600 hover:underline;
 }

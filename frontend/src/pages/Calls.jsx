@@ -21,8 +21,11 @@ export default function Page() {
             .then(({ data }) => {
                 setter(data);
             })
-            .catch(({ response: error}) => {
-                errsetter(error.data);
+            .catch(({ response: error }) => {
+                if (error.config.url === "/api/token/refresh")
+                    alert("What what?!");
+                else
+                    errsetter(error.data);
             });
     }
 

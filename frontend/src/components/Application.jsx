@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import Calls from '@/pages/Calls';
+import Login from '@/pages/Login';
 import Button from "./Button";
 
 export default function Application() {
     const URLS = [
         { path: "/", index: true, name: "Home", component: (<p>Index Page</p>) },
+        { path: "/login", index: false, name: "Login", component: (<Login />) },
         { path: "/calls", index: false, name: "API Calls", component: (<Calls />) },
         { path: "/api", index: false, name: "Api Reference", component: null },
         { path: "/errored", index: false, name: "Error", component: null },
