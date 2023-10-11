@@ -5,7 +5,7 @@ class UserModelAdmin(admin.ModelAdmin):
     fieldsets = (
         ( None, { 'fields': [ 'email' ]}),
         ( 'Details', { 'fields': [ 'first_name', 'last_name' ]}),
-        ( 'Permissions', { 'fields': [ 'is_active', 'is_staff', 'is_superuser' ]})
+        ( 'Permissions', { 'fields': [ 'is_active', 'is_staff', 'is_superuser', 'groups' ]})
     )
     
 admin.site.register(get_user_model(), UserModelAdmin)
