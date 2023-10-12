@@ -1,37 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 html, body, #root {
-    @apply w-full h-full;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 #root {
-    @apply flex flex-col p-2;
+    display: flex;
+    flex-direction: row;
 }
 
 main {
-    @apply flex flex-col flex-grow;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 a {
-    @apply text-blue-600 hover:underline;
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 h1 {
-    @apply text-xl font-bold;
+    font-weight: bold;
+    font-size: 2.5rem;
 }
 
 h2 {
-    @apply text-lg font-bold;
-}
-
-.lg-title {
-    @apply text-xs md:text-sm lg:text-base xl:text-lg font-bold;
-    line-height: 1.25rem;
-}
-
-.xl-title {
-    @apply text-sm md:text-base lg:text-lg xl:text-xl font-bold;
-    line-height: 1.5rem;
+    font-weight: bold;
+    font-size: 2rem;
 }

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Axios } from '@/scripts/Axios';
 import { useSearchParams } from "react-router-dom";
-import Button from "@/components/Button";
-import Text from "@/components/Text";
+import UserContext from "@/components/UserContext";
+
+import { Button } from '@mui/joy';
 
 export default function Page() {
+    const context = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [error, setError] = useState("");
@@ -25,6 +27,9 @@ export default function Page() {
             .then(({ data }) => {
                 if (data.access) localStorage.setItem("TEST-AUTH", data.access);
                 if (data.refresh) localStorage.setItem("TEST-REFRESH", data.refresh);
+
+                context.set("loggedin", true);
+
                 if (params[0].has("redirect")) location.replace(params[0].get("redirect"));
                 else location.replace("/");
             })

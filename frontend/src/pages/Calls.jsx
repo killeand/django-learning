@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Axios } from '@/scripts/Axios';
 import { TokensExist, ClearTokens } from '@/scripts/Utilities';
-import Text from '@/components/Text';
-import Accordian from '@/components/Accordian';
-import Label from '@/components/Label';
-import Button from '@/components/Button';
 
 export default function Page() {
     const [output, setOutput] = useState("");
@@ -55,7 +51,7 @@ export default function Page() {
                 {output && (
                     <div className="alert alert-info"><pre>{JSON.stringify(output, null, '\t')}</pre></div>
                 )}
-                <Accordian color="warning" title="Login" titleElements={(<Label title="Credentials" value={(creds ? "Set" : "Unset")} />)}>
+                {/* <Accordian color="warning" title="Login" titleElements={(<Label title="Credentials" value={(creds ? "Set" : "Unset")} />)}>
                     <Text title="Email" placeholder="Please enter an email address..." value={email} onChange={(retval) => setEmail(retval)} />
                     <Text password title="Password" placeholder="Please enter a password..." value={pass} onChange={(retval) => setPass(retval)} />
                     <Button onClick={Login}>Login</Button>
@@ -64,7 +60,7 @@ export default function Page() {
                 <Accordian color="warning" title="GET">
                     <Button onClick={() => RunGet("/api", setOutput, setOutput)}>GET /api</Button>
                     <Button onClick={() => RunGet("/api/users", setOutput, setOutput)}>GET /api/users</Button>
-                </Accordian>
+                </Accordian> */}
             </div>
         </>
     );

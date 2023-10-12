@@ -6,27 +6,20 @@ const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState({ loggedin: false, name: "" });
-    const [storageEvent, setStorageEvent] = useState(null);
+
+    const reset = () => setUser({ loggedin: false, name: "" });
+    const set = (key, value) => setUser({...user, [key]: value});
 
     useEffect(() => {
         if (TokensExist()) {
-            user["loggedin"] = true;
-            setUser({ ...user });
+            set("loggedin", true);
         }
 
-        if (storageEvent != null) {
-            setStorageEvent(addEventListener('storage', (e) => {
-
-            }));
-        }
-
-        return () => setStorageEvent(null);
+        return reset;
     }, []);
 
-    const isSet = () => _.has(userDetails, "loggedin");
-
     return (
-        <UserContext.Provider value={{user,setUser,isSet}}>
+        <UserContext.Provider value={{user,set}}>
             {children}
         </UserContext.Provider>
     );
