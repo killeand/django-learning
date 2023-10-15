@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { TokensExist, ClearTokens } from './Utilities';
+import { ClearTokens, TokenType } from './Utilities';
 
 function IsTokenError(error) {
     if (_.has(error, "response.data.code")) {
@@ -22,7 +22,7 @@ function AxiosClient() {
 
     // IF ACCESS TOKENS EXIST, USE THEM FOR ALL API CALLS
     new_axios.interceptors.request.use((config) => {
-        let access = localStorage.getItem("TEST-AUTH");
+        let access = localStorage.getItem("TEST-AUTH") || sessionStorage.getItem("TEST-AUTH");
         if (access != null) config.headers["Authorization"] = `Bearer ${access}`;
         
         return config;
@@ -33,8 +33,9 @@ function AxiosClient() {
         let config = error.config;
 
         if (IsTokenError(error)) {
-            let refresh = localStorage.getItem("TEST-REFRESH");
+            let refresh = localStorage.getItem("TEST-REFRESH") || sessionStorage.getItem("TEST-REFRESH");
             localStorage.removeItem("TEST-AUTH");
+            sessionStorage.removeItem("TEST-AUTH");
 
             if (refresh != null) {
                 let retval = null;
@@ -45,11 +46,12 @@ function AxiosClient() {
                 catch (refresh_error) {
                     ClearTokens();
                     location.href = `/login?redirect=${encodeURI(location.pathname)}`;
-                    //return Promise.reject(refresh_error);
                 }
 
                 if (_.has(retval, "data.access")) {
-                    localStorage.setItem("TEST-AUTH", retval.data.access);
+                    if (TokenType == 1) localStorage.setItem("TEST-AUTH", retval.data.access);
+                    else if (TokenType == 2) sessionStorage.setItem("TEST-AUTH", retval.data.access);
+                    else return Promise.reject(error);
 
                     return new_axios(config);
                 }

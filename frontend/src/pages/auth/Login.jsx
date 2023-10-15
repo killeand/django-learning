@@ -1,15 +1,17 @@
 import { useState, useContext } from "react";
 import { Axios } from '@/scripts/Axios';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import UserContext from "@/components/UserContext";
 
-import { Button } from '@mui/joy';
+import { Box, Card, CardActions, CardContent, Divider, FormControl, FormLabel, Checkbox, Input, Button, Alert, Typography as T } from '@mui/joy';
+import { Password } from "@mui/icons-material";
 
 export default function Page() {
     const context = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [error, setError] = useState("");
+    const [loginType, setLoginType] = useState(false);
     const params = useSearchParams();
 
     function Login() {
@@ -25,8 +27,9 @@ export default function Page() {
 
         Axios.post("/api/token", {email:email,password:pass})
             .then(({ data }) => {
-                if (data.access) localStorage.setItem("TEST-AUTH", data.access);
-                if (data.refresh) localStorage.setItem("TEST-REFRESH", data.refresh);
+                let storageType = (loginType) ? localStorage : sessionStorage;
+                if (data.access) storageType.setItem("TEST-AUTH", data.access);
+                if (data.refresh) storageType.setItem("TEST-REFRESH", data.refresh);
 
                 context.set("loggedin", true);
 
@@ -39,24 +42,29 @@ export default function Page() {
     }
 
     return (
-        <>
-            {(error.length > 0) && (<div className="alert alert-error w-11/12 mx-auto mt-2 bi-x-circle">{error}</div>)}
-            <div className="flex flex-grow items-center justify-center">
-                <div className="card card-compact card-bordered bg-slate-100 shadow-xl">
-                    <div className="card-body">
-                        <div className="card-title">Login</div>
-                        <div className="form-control w-full max-w-xs">
-                            <input type="email" placeholder="Enter Email" className="input input-sm input-bordered shadow-inner w-full max-w-xs" value={email} onChange={(e)=>setEmail(e.target.value)} />
-                        </div>
-                        <div className="form-control w-full max-w-xs">
-                            <input type="password" placeholder="Enter Password" className="input input-sm input-bordered shadow-inner w-full max-w-xs" value={pass} onChange={(e)=>setPass(e.target.value)} />
-                        </div>
-                        <div className="card-actions justify-center">
-                            <Button onClick={Login}>Login</Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Card color="primary" variant="outlined" size="sm" sx={{width: { md: '50%'}}}>
+                {(error.length > 0) && (<Alert color="danger" variant="solid">{error}</Alert>)}
+                <T level="title-lg" startDecorator={<Password />}>Login to account</T>
+                <Divider inset="none" />
+                <CardContent>
+                    <FormControl>
+                        <FormLabel>Email</FormLabel>
+                        <Input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Password</FormLabel>
+                        <Input type="password" value={pass} onChange={(e)=>setPass(e.target.value)} />
+                    </FormControl>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '0.5rem' }}>
+                        <Checkbox label="Remember Me" value={loginType} onChange={(e) => setLoginType(e.target.checked)} sx={{flex:1}} />
+                        <Link to="/auth/forget">Forget Password</Link>
+                    </Box>
+                </CardContent>
+                <CardActions>
+                    <Button color="primary" onClick={Login}>Login</Button>
+                </CardActions>
+            </Card>
+        </Box>
     )
 }
