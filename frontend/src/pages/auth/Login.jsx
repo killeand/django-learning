@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
 import { Axios } from '@/scripts/Axios';
 import { useSearchParams, Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import UserContext from "@/components/UserContext";
+import { useColorScheme } from "@mui/joy";
 
 import { Box, Card, CardActions, CardContent, Divider, FormControl, FormLabel, Checkbox, Input, Button, Alert, Typography as T } from '@mui/joy';
 import { Password } from "@mui/icons-material";
@@ -13,6 +15,7 @@ export default function Page() {
     const [error, setError] = useState("");
     const [loginType, setLoginType] = useState(false);
     const params = useSearchParams();
+    const { mode } = useColorScheme();
 
     function Login() {
         setError("");
@@ -37,12 +40,14 @@ export default function Page() {
                 else location.replace("/");
             })
             .catch(({ response: error }) => {
-                setError("Username/Password combination is invalid....");
+                //setError("Username/Password combination is invalid....");
+                toast.error("Username/Password combination is invalid...", {theme:mode});
             })
     }
 
     return (
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ToastContainer />
             <Card color="primary" variant="outlined" size="sm" sx={{width: { md: '50%'}}}>
                 {(error.length > 0) && (<Alert color="danger" variant="solid">{error}</Alert>)}
                 <T level="title-lg" startDecorator={<Password />}>Login to account</T>

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "./UserContext";
-import Calls from '@/pages/Calls';
+import Users from '@/pages/users/Index';
 import SiteIndex from '@/pages/Index';
 import Login from '@/pages/auth/Login';
 import Logout from '@/pages/auth/Logout';
@@ -20,7 +20,7 @@ export default function Application() {
         { path: "/", index: true, name: "Home", authed: false, always: true, component: (<SiteIndex />), icon: Home },
         { path: "/auth/login", index: false, name: "Login", authed: false, always: false, component: (<Login />), icon: Password },
         { path: "/auth/logout", index: false, name: "Logout", authed: true, always: false, component: (<Logout />), icon: Lock },
-        { path: "/calls", index: false, name: "API Calls", authed: true, always: false, component: (<Calls />), icon: Phone },
+        { path: "/users", index: false, name: "Users", authed: true, always: false, component: (<Users />), icon: Phone },
         { path: "/api", index: false, name: "Django: API", authed: false, always: true, component: null, icon: Settings },
         { path: "/admin", index: false, name: "Django: Admin", authed: false, always: true, component: null, icon: Shield },
         { path: "/errored", index: false, name: "Error", authed: false, always: true, component: null, icon: Error },
@@ -33,8 +33,8 @@ export default function Application() {
         return (
             <ListItemButton color="primary" {...isActive}>
                 <NavIcon />
-                <ListItemContent>
-                    <T level="title-sm">{title}</T>
+                <ListItemContent sx={{display: 'flex', alignItems: 'center'}}>
+                    <T level="title-sm" sx={{marginBottom:'-0.3rem'}}>{title}</T>
                 </ListItemContent>
             </ListItemButton>
         );
