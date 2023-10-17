@@ -2,12 +2,15 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-do
 import { useContext } from "react";
 import UserContext from "./UserContext";
 import Users from '@/pages/users/Index';
+import UsersAdd from '@/pages/users/Add';
+import UsersEdit from '@/pages/users/Edit';
+import UsersDelete from '@/pages/users/Delete';
 import SiteIndex from '@/pages/Index';
 import Login from '@/pages/auth/Login';
 import Logout from '@/pages/auth/Logout';
 import FoF from '@/pages/404';
 
-import { Home, Password, Lock, Phone, Settings, Shield, Error, DarkModeRounded, LightMode } from "@mui/icons-material";
+import { Home, Password, Lock, People, Settings, Shield, Error, DarkModeRounded, LightMode } from "@mui/icons-material";
 import { Sheet, Box, List, ListItem, ListItemButton, ListItemContent, Typography as T, IconButton } from "@mui/joy";
 import { useColorScheme } from "@mui/joy";
     
@@ -17,13 +20,17 @@ export default function Application() {
     const ActiveIcon = (mode === "light") ? DarkModeRounded : LightMode;
 
     const URLS = [
-        { path: "/", index: true, name: "Home", authed: false, always: true, component: (<SiteIndex />), icon: Home },
-        { path: "/auth/login", index: false, name: "Login", authed: false, always: false, component: (<Login />), icon: Password },
-        { path: "/auth/logout", index: false, name: "Logout", authed: true, always: false, component: (<Logout />), icon: Lock },
-        { path: "/users", index: false, name: "Users", authed: true, always: false, component: (<Users />), icon: Phone },
-        { path: "/api", index: false, name: "Django: API", authed: false, always: true, component: null, icon: Settings },
-        { path: "/admin", index: false, name: "Django: Admin", authed: false, always: true, component: null, icon: Shield },
-        { path: "/errored", index: false, name: "Error", authed: false, always: true, component: null, icon: Error },
+        { path: "/", index: true, name: "Home", authed: false, always: true, component: (<SiteIndex />), icon: Home, sub: [] },
+        { path: "/auth/login", index: false, name: "Login", authed: false, always: false, component: (<Login />), icon: Password, sub: [] },
+        { path: "/auth/logout", index: false, name: "Logout", authed: true, always: false, component: (<Logout />), icon: Lock, sub: [] },
+        { path: "/users", index: false, name: "Users", authed: true, always: false, component: (<Users />), icon: People, sub: [
+            { path: "add", index: false, component: (<UsersAdd />) },
+            { path: "edit/:id", index: false, component: (<UsersEdit />) },
+            { path: "delete/:id", index: false, component: (<UsersDelete />) }
+        ] },
+        { path: "/api", index: false, name: "Django: API", authed: false, always: true, component: null, icon: Settings, sub: [] },
+        { path: "/admin", index: false, name: "Django: Admin", authed: false, always: true, component: null, icon: Shield, sub: [] },
+        { path: "/errored", index: false, name: "Error", authed: false, always: true, component: null, icon: Error, sub: [] },
     ];
 
     function NavItem({ icon, title, active }) {
@@ -81,7 +88,16 @@ export default function Application() {
                         if (item.index) addindex["index"] = null;
 
                         if (item.component != null)
-                            return <Route key={`route-${index}-${item.name}`} {...addindex} path={item.path} element={item.component} />
+                            return (
+                                <Route key={`route-${index}-${item.name}`} {...addindex} path={item.path} element={item.component}>
+                                    {(item.sub.length > 0) && item.sub.map((subitem, index2) => {
+                                        let addindex2 = {};
+                                        if (subitem.index) addindex2["index"] = null;
+
+                                        return <Route key={`subroute-${index2}-${item.name}`} {...addindex} path={subitem.path} element={subitem.component} />
+                                    })}
+                                </Route>
+                            )
                     })}
                     <Route path="/404" element={<FoF />} />
                     <Route path="*" element={<Navigate to="/404" />} />
