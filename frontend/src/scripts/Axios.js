@@ -45,12 +45,12 @@ function AxiosClient() {
                 }
                 catch (refresh_error) {
                     ClearTokens();
-                    location.href = `/login?redirect=${encodeURI(location.pathname)}`;
+                    location.href = `/auth/login?redirect=${encodeURI(location.pathname)}`;
                 }
 
                 if (_.has(retval, "data.access")) {
-                    if (TokenType == 1) localStorage.setItem("TEST-AUTH", retval.data.access);
-                    else if (TokenType == 2) sessionStorage.setItem("TEST-AUTH", retval.data.access);
+                    if (TokenType() == 1) localStorage.setItem("TEST-AUTH", retval.data.access);
+                    else if (TokenType() == 2) sessionStorage.setItem("TEST-AUTH", retval.data.access);
                     else return Promise.reject(error);
 
                     return new_axios(config);

@@ -5,7 +5,7 @@ from .managers import UserManager
 
 class UserModel(AbstractUser):
     def __str__(self):
-        return self.email
+        return "<UserModel object> = " + self.email
     
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     email = models.CharField(max_length=254, unique=True)

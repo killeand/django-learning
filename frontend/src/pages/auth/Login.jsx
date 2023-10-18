@@ -62,7 +62,7 @@ export default function Page() {
                         <Input type="password" value={pass} onChange={(e)=>setPass(e.target.value)} />
                     </FormControl>
                     <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '0.5rem' }}>
-                        <Checkbox label="Remember Me" value={loginType} onChange={(e) => setLoginType(e.target.checked)} sx={{flex:1}} />
+                        <Checkbox label="Remember Me" checked={loginType} onChange={(e) => setLoginType(e.target.checked)} sx={{flex:1}} />
                         <Link to="/auth/forget">Forget Password</Link>
                     </Box>
                 </CardContent>

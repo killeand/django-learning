@@ -8,4 +8,5 @@ user_router.register(r'limited-users', views.LimitedUserView, basename='limited-
 
 urlpatterns = [
     path('', include(user_router.urls)),
+    path('whoami', views.WhoAmI.as_view({'get':'list'}), name="whoami"),
 ]
