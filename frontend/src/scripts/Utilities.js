@@ -13,7 +13,7 @@ export function ClearTokens() {
 }
 
 export function TokenType() {
-    if (localStorage.getItem("TEST-REFRESH") != null) return 1;
-    if (sessionStorage.getItem("TEST-REFRESH") != null) return 2;
-    return 0;
+    if (localStorage.getItem("TEST-REFRESH") != null) return localStorage;
+    if (sessionStorage.getItem("TEST-REFRESH") != null) return sessionStorage;
+    return null;
 }

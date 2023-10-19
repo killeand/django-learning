@@ -9,7 +9,7 @@ export default function Page() {
     const context = useContext(UserContext);
 
     useEffect(() => {
-        context.set("loggedin", false);
+        context.reset();
         ClearTokens();
     }, []);
 

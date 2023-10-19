@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Axios } from '@/scripts/Axios';
 import { useSearchParams, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import jwtdecode from 'jwt-decode';
 import UserContext from "@/components/UserContext";
 import { useColorScheme } from "@mui/joy";
 
@@ -31,10 +32,18 @@ export default function Page() {
         Axios.post("/api/token", {email:email,password:pass})
             .then(({ data }) => {
                 let storageType = (loginType) ? localStorage : sessionStorage;
+                let token = jwtdecode(data.refresh);
                 if (data.access) storageType.setItem("TEST-AUTH", data.access);
                 if (data.refresh) storageType.setItem("TEST-REFRESH", data.refresh);
 
-                context.set("loggedin", true);
+                context.setUser({
+                    id: token.user_id,
+                    email: token.sub.email,
+                    fn: token.sub.fn,
+                    ln: token.sub.ln,
+                    staff: token.sub.staff,
+                    active: token.sub.active
+                });
 
                 if (params[0].has("redirect")) location.replace(params[0].get("redirect"));
                 else location.replace("/");

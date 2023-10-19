@@ -24,12 +24,13 @@ class LimitedUserSerializer(serializers.ModelSerializer):
         fields = [ 'id', 'first_name', 'last_name' ]
         
 class DetailedTokenPairSerializer(TokenObtainPairSerializer):
-    @classmethod
     def get_token(self, user):
         token = super().get_token(user)
         
         token['sub'] = {
-            'name': user.email,
+            'email': user.email,
+            'fn': user.first_name,
+            'ln': user.last_name,
             'active': user.is_active,
             'staff': user.is_staff,
         }

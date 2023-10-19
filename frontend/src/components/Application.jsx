@@ -62,7 +62,7 @@ export default function Application() {
                             let comp = (item.component == null) ? "a" : NavLink;
                             let path = (item.component == null) ? { href: item.path } : { to: item.path };
 
-                            if (item.always || (context.user.loggedin && item.authed) || (!context.user.loggedin && !item.authed))
+                            if (item.always || (context.user && item.authed) || (!context.user && !item.authed))
                                 return (
                                     <ListItem key={`nav-${index}-${item.name}`}>
                                         {(comp === "a") && (
@@ -79,6 +79,9 @@ export default function Application() {
                                 );
                         })}
                     </List>
+                </Box>
+                <Box>
+                    {(context.user) && <T>{context.user.email}</T>}
                 </Box>
             </Sheet>
             <Sheet component="main" sx={{flexGrow:1}}>

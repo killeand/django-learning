@@ -49,9 +49,7 @@ function AxiosClient() {
                 }
 
                 if (_.has(retval, "data.access")) {
-                    if (TokenType() == 1) localStorage.setItem("TEST-AUTH", retval.data.access);
-                    else if (TokenType() == 2) sessionStorage.setItem("TEST-AUTH", retval.data.access);
-                    else return Promise.reject(error);
+                    TokenType().setItem("TEST-AUTH", retval.data.access);
 
                     return new_axios(config);
                 }
