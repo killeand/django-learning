@@ -1,27 +1,27 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-class UserSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField()
-    password = serializers.CharField(max_length=128, required=True)
-    email = serializers.CharField(max_length=254, required=True)
-    first_name = serializers.CharField(max_length=150, required=True)
-    last_name = serializers.CharField(max_length=150, required=True)
-    date_joined = serializers.DateTimeField()
-    last_login = serializers.DateTimeField()
-    is_active = serializers.BooleanField()
-    is_staff = serializers.BooleanField()
-    is_superuser = serializers.BooleanField()
+class UserSerializer(ModelSerializer):
+    password = CharField(write_only=True)
     
     class Meta:
         model = get_user_model()
-        exclude = [ 'username' ]
+        fields = [ 'id', 'email', 'password', 'first_name', 'last_name', 'is_active', 'is_staff', 'date_joined' ]
         
-class LimitedUserSerializer(serializers.ModelSerializer):
+    
+    def create(self, validated_data):
+        print(validated_data)
+        email = validated_data.pop('email')
+        password = validated_data.pop('password')
+        user = get_user_model().objects.create_user(email, password, **validated_data)
+        
+        return user
+
+class ListUserSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = [ 'id', 'first_name', 'last_name' ]
+        fields = [ 'id', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'date_joined' ]
         
 class DetailedTokenPairSerializer(TokenObtainPairSerializer):
     def get_token(self, user):

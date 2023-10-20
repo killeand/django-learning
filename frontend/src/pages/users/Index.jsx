@@ -1,45 +1,38 @@
-import { useEffect, useState } from 'react';
-import { Axios } from '@/scripts/Axios';
+import { useQuery } from '@tanstack/react-query';
+import { ListUsers } from '@/scripts/query/users';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { ulid } from 'ulidx';
-import { v1 as uuid } from 'uuid';
-import { faker } from '@faker-js/faker';
 
-import { Sheet, Box, Divider, Table, ButtonGroup, Button, IconButton, Typography as T } from '@mui/joy';
+import { Sheet, Box, Divider, Table, ButtonGroup, Button, IconButton, CircularProgress, Typography as T } from '@mui/joy';
 import { CheckCircle, Add, Edit, Delete } from '@mui/icons-material';
 
 /* ID, Email, First Name, Last Name, isActive, isStaff */
 
 export default function Page() {
-    const [users, setUsers] = useState([]);
     const nav = useNavigate();
 
-    useEffect(() => {
-        let newUsers = [];
-
-        for (let i = 0; i < 100; i++) {
-            let fn = faker.person.firstName();
-            let ln = faker.person.lastName();
-
-            newUsers.push({ id: ulid(), email: fn.toLowerCase()[0] + ln.toLowerCase() + "@" + faker.internet.domainName(), firstname: fn, lastname: ln, isactive: faker.datatype.boolean(), isstaff: faker.datatype.boolean() });
-        }
-
-        setUsers(newUsers);
-
-        return () => setUsers([]);
-    }, []);
+    let users = useQuery(ListUsers);
 
     function RenderUsers() {
-        if (users.length <= 0)
+        if (users.isPending)
+            return (
+                    <tr>
+                        <td colSpan="5">
+                            <T startDecorator={<CircularProgress size="sm" />}>Loading Data...</T>
+                        </td>
+                    </tr>
+            );
+        
+        if (users.data.length <= 0)
             return (<tr><td colSpan="5"><T>No data present...</T></td></tr>);
         
-        return users.map((user, index) => {
+        return users.data.map((user, index) => {
+            
             return (
-                <tr key={`userdata-${index}-${ulid()}`}>
-                    <td>{(user.isactive) && <CheckCircle color="success" />}</td>
+                <tr key={`userdata-${user.id}`}>
+                    <td>{(user.is_active) && <CheckCircle color="success" />}</td>
                     <td><T level="sm">{user.email}</T></td>
-                    <td><T level="sm">{user.firstname + " " + user.lastname}</T></td>
-                    <td>{(user.isstaff) && <CheckCircle color="danger" />}</td>
+                    <td><T level="sm">{user.first_name + " " + user.last_name}</T></td>
+                    <td>{(user.is_staff) && <CheckCircle color="danger" />}</td>
                     <td>
                         <ButtonGroup variant="outlined" color="primary" aria-label="button group">
                             <Button color="warning" variant="soft" startDecorator={<Edit />} onClick={()=>nav("/users/edit/" + user.id)}>Edit</Button>

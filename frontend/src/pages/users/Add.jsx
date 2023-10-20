@@ -1,17 +1,30 @@
-import { useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { CreateUsers } from '@/scripts/query/users'
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import { Box, Modal, Card, CardContent, CardActions, Button, Typography as T } from "@mui/joy";
-import { Axios } from "@/scripts/Axios";
+import { faker } from '@faker-js/faker';
 
 export default function Page() {
+    const [open, setOpen] = useState(true);
     const nav = useNavigate();
 
+    const users = useMutation(CreateUsers);
+
     function Call() {
-        Axios.get("/api/whoami");
+        users.mutate({
+            email: faker.internet.email(),
+            password: 'light2256',
+            first_name: 'Jay',
+            last_name: 'Jo',
+            is_active: true,
+            is_staff: false
+        });
+        setOpen(false);
     }
 
     return (
-        <Modal open={true} onClose={()=>nav("/users")}>
+        <Modal open={open} onClose={()=>nav("/users")}>
             <Card color="primary" variant="outlined" sx={{
                 position: 'absolute',
                 top: '50%',

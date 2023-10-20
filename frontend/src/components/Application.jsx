@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink, Link, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "./UserContext";
 import Users from '@/pages/users/Index';
@@ -10,8 +10,8 @@ import Login from '@/pages/auth/Login';
 import Logout from '@/pages/auth/Logout';
 import FoF from '@/pages/404';
 
-import { Home, Password, Lock, People, Settings, Shield, Error, DarkModeRounded, LightMode } from "@mui/icons-material";
-import { Sheet, Box, List, ListItem, ListItemButton, ListItemContent, Typography as T, IconButton } from "@mui/joy";
+import { Home, Password, Lock, People, Settings, Shield, Error, DarkModeRounded, LightMode, LogoutRounded } from "@mui/icons-material";
+import { Avatar, Sheet, Box, List, ListItem, ListItemButton, ListItemContent, IconButton, Typography as T, Divider } from "@mui/joy";
 import { useColorScheme } from "@mui/joy";
     
 export default function Application() {
@@ -80,9 +80,21 @@ export default function Application() {
                         })}
                     </List>
                 </Box>
-                <Box>
-                    {(context.user) && <T>{context.user.email}</T>}
-                </Box>
+                {(context.user) && (
+                    <>
+                        <Divider />
+                        <Box sx={{display:'flex',gap:1,alignItems:'center'}}>
+                            <Avatar variant="outlined" size="sm">{context.user.fn[0] + context.user.ln[0]}</Avatar>
+                            <Box sx={{flexGrow:1}}>
+                                <T level="title-sm" sx={{ textOverflow: 'ellipsis' }}>{context.user.fn + " " + context.user.ln}</T>
+                                <T level="body-xs">{context.user.email}</T>
+                            </Box>
+                            <IconButton variant="plain" size="sm" color="primary" component={Link} to="/auth/logout">
+                                <LogoutRounded />
+                            </IconButton>
+                        </Box>
+                    </>
+                )}
             </Sheet>
             <Sheet component="main" sx={{flexGrow:1}}>
                 <Routes>
