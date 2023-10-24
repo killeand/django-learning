@@ -84,7 +84,7 @@ export default function Application() {
                     <>
                         <Divider />
                         <Box sx={{display:'flex',gap:1,alignItems:'center'}}>
-                            <Avatar variant="outlined" size="sm">{context.user.fn[0] + context.user.ln[0]}</Avatar>
+                            <Avatar variant="outlined" size="sm">{context.user.fn.substr(0,1) + context.user.ln.substr(0,1)}</Avatar>
                             <Box sx={{flexGrow:1}}>
                                 <T level="title-sm" sx={{ textOverflow: 'ellipsis' }}>{context.user.fn + " " + context.user.ln}</T>
                                 <T level="body-xs">{context.user.email}</T>

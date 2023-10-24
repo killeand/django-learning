@@ -21,6 +21,7 @@ export default function Page() {
             is_staff: false
         });
         setOpen(false);
+        nav("/");
     }
 
     return (
