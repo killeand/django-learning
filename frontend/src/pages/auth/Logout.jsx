@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react';
-import { ClearTokens } from "@/scripts/Utilities";
 import UserContext from '@/components/UserContext';
+import { ClearTokens } from '@/scripts/TokenManager';
 
 import { Box, Card, CardContent, Divider, Typography as T } from '@mui/joy';
 import { Lock } from '@mui/icons-material';

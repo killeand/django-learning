@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Axios } from '@/scripts/Axios';
-import { TokensExist, ClearTokens } from '@/scripts/Utilities';
+import { ClearTokens, TokensExist } from '@/scripts/TokenManager';
 
 export default function Page() {
     const [output, setOutput] = useState("");

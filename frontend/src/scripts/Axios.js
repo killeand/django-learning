@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { ClearTokens, TokenType } from './Utilities';
+import { ClearAccessToken, ClearTokens, GetAccessToken, GetRefreshToken, SetAccessToken, TokenType } from './TokenManager';
 
 function IsTokenError(error) {
     if (_.has(error, "response.data.code")) {
@@ -22,7 +22,7 @@ function AxiosClient() {
 
     // IF ACCESS TOKENS EXIST, USE THEM FOR ALL API CALLS
     new_axios.interceptors.request.use((config) => {
-        let access = localStorage.getItem("TEST-AUTH") || sessionStorage.getItem("TEST-AUTH");
+        let access = GetAccessToken();
         if (access != null) config.headers["Authorization"] = `Bearer ${access}`;
         
         return config;
@@ -33,9 +33,8 @@ function AxiosClient() {
         let config = error.config;
 
         if (IsTokenError(error)) {
-            let refresh = localStorage.getItem("TEST-REFRESH") || sessionStorage.getItem("TEST-REFRESH");
-            localStorage.removeItem("TEST-AUTH");
-            sessionStorage.removeItem("TEST-AUTH");
+            let refresh = GetRefreshToken()
+            ClearAccessToken();
 
             if (refresh != null) {
                 let retval = null;
@@ -49,7 +48,7 @@ function AxiosClient() {
                 }
 
                 if (_.has(retval, "data.access")) {
-                    TokenType().setItem("TEST-AUTH", retval.data.access);
+                    SetAccessToken(TokenType(), retval.data.access);
 
                     return new_axios(config);
                 }

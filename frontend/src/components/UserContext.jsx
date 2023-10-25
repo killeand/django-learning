@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import _ from 'lodash';
 import jwtdecode from 'jwt-decode';
-import { TokensExist, TokenType } from "@/scripts/Utilities";
+import { GetRefreshToken, TokensExist } from "@/scripts/TokenManager";
 
 const UserContext = createContext(null);
 
@@ -13,7 +13,7 @@ export function UserProvider({ children }) {
 
     useEffect(() => {
         if (TokensExist()) {
-            let token = jwtdecode(TokenType().getItem("TEST-REFRESH"));
+            let token = jwtdecode(GetRefreshToken());
             setUser({
                 id: token.user_id,
                 email: token.sub.email,

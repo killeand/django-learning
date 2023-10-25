@@ -4,10 +4,12 @@ import { useSearchParams, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import jwtdecode from 'jwt-decode';
 import UserContext from "@/components/UserContext";
+import { SetAccessToken, SetRefreshToken } from "@/scripts/TokenManager";
 import { useColorScheme } from "@mui/joy";
 
 import { Box, Card, CardActions, CardContent, Divider, FormControl, FormLabel, Checkbox, Input, Button, Alert, Typography as T } from '@mui/joy';
 import { Password } from "@mui/icons-material";
+
 
 export default function Page() {
     const context = useContext(UserContext);
@@ -33,8 +35,8 @@ export default function Page() {
             .then(({ data }) => {
                 let storageType = (loginType) ? localStorage : sessionStorage;
                 let token = jwtdecode(data.refresh);
-                if (data.access) storageType.setItem("TEST-AUTH", data.access);
-                if (data.refresh) storageType.setItem("TEST-REFRESH", data.refresh);
+                SetAccessToken(storageType, data.access);
+                SetRefreshToken(storageType, data.refresh);
 
                 context.setUser({
                     id: token.user_id,
