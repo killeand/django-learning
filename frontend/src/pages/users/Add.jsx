@@ -43,7 +43,7 @@ export default function Page() {
         },
         validationSchema: users_schema,
         validateOnBlur: true,
-        onSubmit: (values) => console.log("FORM SUBMIT", values)
+        onSubmit: (values) => console.log("FORM SUBMIT", values),
     })
     
 
@@ -62,85 +62,83 @@ export default function Page() {
 
     return (
         <Modal open={true} onClose={()=>nav("/users")}>
-            <Card color="primary" variant="outlined" sx={{
+            <Card component="form" onSubmit={formik.handleSubmit} color="primary" variant="outlined" sx={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
             }}>
-                <form onSubmit={formik.handleSubmit}>
-                    <CardContent>
-                        <ModalClose />
-                        <T level="title-lg">Add User</T>
-                        <FormControl>
-                            <FormLabel>Email</FormLabel>
-                            <Input
-                                name="email"
-                                type="email"
-                                value={formik.values.email}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.email && Boolean(formik.errors.email))}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Password</FormLabel>
-                            <Input
-                                name="password"
-                                type="password"
-                                value={formik.values.password}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.password && Boolean(formik.errors.password))}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>First Name</FormLabel>
-                            <Input
-                                name="first_name"
-                                type="text"
-                                value={formik.values.first_name}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.first_name && Boolean(formik.errors.first_name))}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Last Name</FormLabel>
-                            <Input
-                                name="last_name"
-                                type="text"
-                                value={formik.values.last_name}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.last_name && Boolean(formik.errors.last_name))}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Activate User</FormLabel>
-                            <Switch
-                                name="is_active"
-                                checked={formik.values.is_active}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.is_active && Boolean(formik.errors.is_active))}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Is Admin</FormLabel>
-                            <Switch
-                                name="is_staff"
-                                checked={formik.values.is_staff}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={(formik.touched.is_staff && Boolean(formik.errors.is_staff))}
-                            />
-                        </FormControl>
-                    </CardContent>
-                    <CardActions>
-                        <Button>Create User</Button>
-                    </CardActions>
-                </form>
+                <CardContent>
+                    <ModalClose />
+                    <T level="title-lg">Add User</T>
+                    <FormControl>
+                        <FormLabel>Email</FormLabel>
+                        <Input
+                            name="email"
+                            type="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.email && Boolean(formik.errors.email))}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Password</FormLabel>
+                        <Input
+                            name="password"
+                            type="password"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.password && Boolean(formik.errors.password))}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>First Name</FormLabel>
+                        <Input
+                            name="first_name"
+                            type="text"
+                            value={formik.values.first_name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.first_name && Boolean(formik.errors.first_name))}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Last Name</FormLabel>
+                        <Input
+                            name="last_name"
+                            type="text"
+                            value={formik.values.last_name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.last_name && Boolean(formik.errors.last_name))}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Activate User</FormLabel>
+                        <Switch
+                            name="is_active"
+                            checked={formik.values.is_active}
+                            onChange={(e) => formik.setFieldValue("is_active", e.target.checked)}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.is_active && Boolean(formik.errors.is_active))}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Is Admin</FormLabel>
+                        <Switch
+                            name="is_staff"
+                            checked={formik.values.is_staff}
+                            onChange={(e) => formik.setFieldValue("is_staff", e.target.checked)}
+                            onBlur={formik.handleBlur}
+                            error={(formik.touched.is_staff && Boolean(formik.errors.is_staff))}
+                        />
+                    </FormControl>
+                </CardContent>
+                <CardActions>
+                    <Button onClick={formik.submitForm}>Submit</Button>
+                </CardActions>
             </Card>
         </Modal>
     );
