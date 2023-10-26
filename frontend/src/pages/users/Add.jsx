@@ -3,14 +3,19 @@ import { CreateUsers } from '@/scripts/query/users'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import * as yup from 'yup';
-import { useFormik } from 'formik';
-import { Modal, ModalClose, Card, CardContent, CardActions, FormControl, FormLabel, Input, Switch, Button, Typography as T } from "@mui/joy";
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Modal, ModalClose, Card, CardContent, CardActions, FormControl, FormLabel, Input, Switch, Button, Typography as T, FormHelperText } from "@mui/joy";
 import { faker } from '@faker-js/faker';
 
 export default function Page() {
     const DoSomethingCool = () => {
         console.info("Uuuugh.... NO! Too embarassing!");
         nav("/users");
+    }
+
+    const SubmitForm = (...props) => {
+        console.info("DATA!", props);
     }
 
     const nav = useNavigate();
@@ -32,37 +37,29 @@ export default function Page() {
         is_staff: yup
             .boolean()
     });
-    const formik = useFormik({
-        initialValues: {
-            email: "",
-            password: "",
-            first_name: "",
-            last_name: "",
-            is_active: false,
-            is_staff: false
-        },
-        validationSchema: users_schema,
-        validateOnBlur: true,
-        onSubmit: (values) => console.log("FORM SUBMIT", values),
-    })
-    
+    const { control, handleSubmit } = useForm({ resolver: yupResolver(users_schema) });
 
-    // function Call() {
-    //     users.mutate({
-    //         email: faker.internet.email(),
-    //         password: 'light2256',
-    //         first_name: 'Jay',
-    //         last_name: 'Jo',
-    //         is_active: true,
-    //         is_staff: false
-    //     });
-    //     setOpen(false);
-    //     nav("/users");
-    // }
+    function MyInput({ type, name, label, control }) {
+        return (
+            <Controller
+                name={name}
+                control={control}
+                render={({ field, fieldState: { errors } }) => (
+                    <FormControl>
+                        <FormLabel>{label}</FormLabel>
+                        <Input type={type || "text"} {...field} />
+                        <FormHelperText>
+                            <T level="body-xs">{errors?.message}</T>
+                        </FormHelperText>
+                    </FormControl>
+                )}
+            />
+        );
+    }
 
     return (
         <Modal open={true} onClose={()=>nav("/users")}>
-            <Card component="form" onSubmit={formik.handleSubmit} color="primary" variant="outlined" sx={{
+            <Card component="form" onSubmit={handleSubmit(SubmitForm)} color="primary" variant="outlined" sx={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
@@ -71,7 +68,8 @@ export default function Page() {
                 <CardContent>
                     <ModalClose />
                     <T level="title-lg">Add User</T>
-                    <FormControl>
+                    <MyInput type="email" name="email" control={control} label="Email" />
+                    {/* <FormControl>
                         <FormLabel>Email</FormLabel>
                         <Input
                             name="email"
@@ -81,8 +79,8 @@ export default function Page() {
                             onBlur={formik.handleBlur}
                             error={(formik.touched.email && Boolean(formik.errors.email))}
                         />
-                    </FormControl>
-                    <FormControl>
+                    </FormControl> */}
+                    {/* <FormControl>
                         <FormLabel>Password</FormLabel>
                         <Input
                             name="password"
@@ -134,10 +132,10 @@ export default function Page() {
                             onBlur={formik.handleBlur}
                             error={(formik.touched.is_staff && Boolean(formik.errors.is_staff))}
                         />
-                    </FormControl>
+                    </FormControl> */}
                 </CardContent>
                 <CardActions>
-                    <Button onClick={formik.submitForm}>Submit</Button>
+                    <Button type="submit" >Submit</Button>
                 </CardActions>
             </Card>
         </Modal>
