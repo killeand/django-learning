@@ -3,10 +3,11 @@ import { CreateUsers } from '@/scripts/query/users'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import * as yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useController, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Modal, ModalClose, Card, CardContent, CardActions, FormControl, FormLabel, Input, Switch, Button, Typography as T, FormHelperText } from "@mui/joy";
+import { Box, Modal, ModalClose, Card, CardContent, CardActions, FormControl, FormLabel, Input, Switch, Button, Typography as T, FormHelperText } from "@mui/joy";
 import { faker } from '@faker-js/faker';
+import _ from 'lodash';
 
 export default function Page() {
     const DoSomethingCool = () => {
@@ -14,8 +15,8 @@ export default function Page() {
         nav("/users");
     }
 
-    const SubmitForm = (...props) => {
-        console.info("DATA!", props);
+    const SubmitForm = (data) => {
+        users.mutate(data);
     }
 
     const nav = useNavigate();
@@ -37,23 +38,34 @@ export default function Page() {
         is_staff: yup
             .boolean()
     });
-    const { control, handleSubmit } = useForm({ resolver: yupResolver(users_schema) });
+    const { control, handleSubmit } = useForm({
+        mode: "onBlur",
+        shouldFocusError: true,
+        resolver: yupResolver(users_schema)
+    });
 
-    function MyInput({ type, name, label, control }) {
+    function MyInput({ type, label, ...controllerProps }) {
+        const { field, fieldState } = useController(controllerProps);
+        
         return (
-            <Controller
-                name={name}
-                control={control}
-                render={({ field, fieldState: { errors } }) => (
-                    <FormControl>
-                        <FormLabel>{label}</FormLabel>
-                        <Input type={type || "text"} {...field} />
-                        <FormHelperText>
-                            <T level="body-xs">{errors?.message}</T>
-                        </FormHelperText>
-                    </FormControl>
-                )}
-            />
+            <FormControl error={!_.isNil(fieldState.error)}>
+                <FormLabel>{label}</FormLabel>
+                <Input type={type || "text"} {...field} />
+                <FormHelperText>
+                    <T level="body-xs">{fieldState.error?.message}</T>
+                </FormHelperText>
+            </FormControl>
+        );
+    }
+
+    function MySwitch({ label, ...controllerProps }) {
+        const { field } = useController(controllerProps);
+
+        return (
+            <FormControl>
+                <FormLabel>{label}</FormLabel>
+                <Switch {...field} />
+            </FormControl>
         );
     }
 
@@ -68,71 +80,18 @@ export default function Page() {
                 <CardContent>
                     <ModalClose />
                     <T level="title-lg">Add User</T>
-                    <MyInput type="email" name="email" control={control} label="Email" />
-                    {/* <FormControl>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                            name="email"
-                            type="email"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.email && Boolean(formik.errors.email))}
-                        />
-                    </FormControl> */}
-                    {/* <FormControl>
-                        <FormLabel>Password</FormLabel>
-                        <Input
-                            name="password"
-                            type="password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.password && Boolean(formik.errors.password))}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>First Name</FormLabel>
-                        <Input
-                            name="first_name"
-                            type="text"
-                            value={formik.values.first_name}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.first_name && Boolean(formik.errors.first_name))}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>Last Name</FormLabel>
-                        <Input
-                            name="last_name"
-                            type="text"
-                            value={formik.values.last_name}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.last_name && Boolean(formik.errors.last_name))}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>Activate User</FormLabel>
-                        <Switch
-                            name="is_active"
-                            checked={formik.values.is_active}
-                            onChange={(e) => formik.setFieldValue("is_active", e.target.checked)}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.is_active && Boolean(formik.errors.is_active))}
-                        />
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>Is Admin</FormLabel>
-                        <Switch
-                            name="is_staff"
-                            checked={formik.values.is_staff}
-                            onChange={(e) => formik.setFieldValue("is_staff", e.target.checked)}
-                            onBlur={formik.handleBlur}
-                            error={(formik.touched.is_staff && Boolean(formik.errors.is_staff))}
-                        />
-                    </FormControl> */}
+                    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'start', gap: 1}}>
+                        <MyInput type="email" name="email" defaultValue={faker.internet.email} control={control} label="Email" />
+                        <MyInput type="password" name="password" defaultValue="light2256" control={control} label="Password" />
+                    </Box>
+                    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'start', gap: 1}}>
+                        <MyInput type="text" name="first_name" defaultValue="" control={control} label="First Name" />
+                        <MyInput type="text" name="last_name" defaultValue="" control={control} label="Last Name" />
+                    </Box>
+                    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'start', justifyContent: 'space-evenly', gap: 1}}>
+                        <MySwitch name="is_active" defaultValue={false} control={control} label="Activate User" />
+                        <MySwitch name="is_staff" defaultValue={false} control={control} label="Is Admin" />
+                    </Box>
                 </CardContent>
                 <CardActions>
                     <Button type="submit" >Submit</Button>
