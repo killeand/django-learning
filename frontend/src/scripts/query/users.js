@@ -7,6 +7,13 @@ export const ListUsers = {
     staleTime: 5 * 60 * 1000
 };
 
+export const RetrieveUser = (uid) => {
+    const cache = TanQuery.getQueryCache();
+    const user = cache.find({ queryKey: ['users'] });
+
+    return user.state.data.filter((item) => (item.id == uid));
+}
+
 export const CreateUsers = (callbackFn) => ({
     mutationFn: (userData) => Axios.post("/api/users/", userData).then((resp) => resp.data),
     onMutate: () => {
