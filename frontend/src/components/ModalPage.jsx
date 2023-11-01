@@ -1,13 +1,13 @@
 import { Modal, ModalDialog, DialogTitle, ModalClose, Divider } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
 
-export default function ModalPage({ color, title, icon, closenav, element, children, ...props }) {
+export default function ModalPage({ color, title, icon, path, children, ...props }) {
     const nav = useNavigate();
-    const Element = element;
     const Icon = icon;
+    let elements = (Array.isArray(children)) ? children : [children];
 
     function CloseEvent() {
-        nav(closenav);
+        nav(path);
     }
 
     return (
@@ -24,9 +24,11 @@ export default function ModalPage({ color, title, icon, closenav, element, child
                     <ModalClose />
                 </DialogTitle>
                 <Divider />
-                <Element color={color || "primary"} onClose={CloseEvent} {...props}>
-                    {children}
-                </Element>
+                {elements.map((child, index) => {
+                    const Child = child;
+
+                    return <Child key={`modalchild-${index}-${child.type}`} color={color || primary} onClose={CloseEvent} {...props} />
+                })}
             </ModalDialog>
         </Modal>
     );

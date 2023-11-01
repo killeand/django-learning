@@ -26,6 +26,18 @@ export const CreateUsers = (callbackFn) => ({
     },
 });
 
+export const UpdateUsers = (callbackFn) => ({
+    mutationFn: (userData) => Axios.patch("/api/users/" + userData.id + "/", userData).then((resp) => resp.data),
+    onMutate: () => {
+        TanQuery.invalidateQueries({ queryKey: ['users'] });
+        if (callbackFn) callbackFn();
+    },
+    onSuccess: () => {
+        TanQuery.invalidateQueries({ queryKey: ['users'] });
+        if (callbackFn) callbackFn();
+    },
+});
+
 export const DeleteUsers = (callbackFn) => ({
     mutationFn: (id) => Axios.delete("/api/users/" + id).then((resp) => resp.data),
     onMutate: () => {

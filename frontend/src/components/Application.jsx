@@ -2,9 +2,12 @@ import { BrowserRouter, Routes, Route, NavLink, Link, Navigate } from "react-rou
 import { useContext } from "react";
 import UserContext from "./UserContext";
 import ModalPage from "./ModalPage";
+import TabbedModalPage from "./TabbedModalPage";
+import Tabbed from '@/pages/tabbed/Index';
+import Tab1 from '@/pages/tabbed/Tab1';
+import Tab2 from '@/pages/tabbed/Tab2';
 import Users from '@/pages/users/Index';
-import UsersAdd from '@/pages/users/Add';
-import UsersEdit from '@/pages/users/Form';
+import UsersForm from '@/pages/users/Form';
 import UsersDelete from '@/pages/users/Delete';
 import SiteIndex from '@/pages/Index';
 import Login from '@/pages/auth/Login';
@@ -12,8 +15,9 @@ import Logout from '@/pages/auth/Logout';
 import FoF from '@/pages/404';
 
 import { Home, Password, Lock, People, Settings, Shield, Error, DarkModeRounded, LightMode, LogoutRounded } from "@mui/icons-material";
-import { Avatar, Sheet, Box, List, ListItem, ListItemButton, ListItemContent, IconButton, Typography as T, Divider } from "@mui/joy";
+import { DialogContent, DialogActions, Button, Avatar, Sheet, Box, List, ListItem, ListItemButton, ListItemContent, IconButton, Typography as T, Divider } from "@mui/joy";
 import { useColorScheme } from "@mui/joy";
+import { Outlet } from "react-router-dom";
     
 export default function Application() {
     const context = useContext(UserContext);
@@ -25,13 +29,19 @@ export default function Application() {
         { path: "/auth/login", index: false, name: "Login", authed: false, always: false, component: (<Login />), icon: Password, sub: [] },
         { path: "/auth/logout", index: false, name: "Logout", authed: true, always: false, component: (<Logout />), icon: Lock, sub: [] },
         { path: "/users", index: false, name: "Users", authed: true, always: false, component: (<Users />), icon: People, sub: [
-            { path: "add", index: false, component: (<ModalPage color="success" title="Add User" icon={People} closenav="/users" element={UsersAdd} />) },
-            { path: "edit/:id", index: false, component: (<UsersEdit />) },
-            { path: "delete/:id", index: false, component: (<ModalPage color="danger" title="Delete User" icon={Error} closenav="/users" element={UsersDelete} />) }
+            { path: "add", index: false, component: (<ModalPage color="success" title="Add User" icon={People} path="/users/"><UsersForm /></ModalPage>) },
+            { path: "edit/:id", index: false, component: (<ModalPage color="warning" title="Edit User" icon={Shield} path="/users/"><UsersForm /></ModalPage>) },
+            { path: "delete/:id", index: false, component: (<ModalPage color="danger" title="Delete User" icon={Error} path="/users/"><UsersDelete /></ModalPage>) }
         ] },
         { path: "/api", index: false, name: "Django: API", authed: false, always: true, component: null, icon: Settings, sub: [] },
         { path: "/admin", index: false, name: "Django: Admin", authed: false, always: true, component: null, icon: Shield, sub: [] },
         { path: "/errored", index: false, name: "Error", authed: false, always: true, component: null, icon: Error, sub: [] },
+        { path: "/tabbed", index: false, name: "Tabbed Page", authed: true, always: false, component: (<Tabbed />), icon: LightMode, sub: [
+            { path: "set", index: false, component: (<TabbedModalPage color="danger" title="Tabbed Test" icon={LightMode} path="/tabbed/">
+                <Tab1 title="Test 1" />
+                <Tab2 title="Test 2" />
+            </TabbedModalPage>) },
+        ] },
     ];
 
     function NavItem({ icon, title, active }) {
