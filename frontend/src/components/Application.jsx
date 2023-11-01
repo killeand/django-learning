@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, NavLink, Link, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "./UserContext";
+import ModalPage from "./ModalPage";
 import Users from '@/pages/users/Index';
 import UsersAdd from '@/pages/users/Add';
-import UsersEdit from '@/pages/users/Edit';
+import UsersEdit from '@/pages/users/Form';
 import UsersDelete from '@/pages/users/Delete';
 import SiteIndex from '@/pages/Index';
 import Login from '@/pages/auth/Login';
@@ -24,9 +25,9 @@ export default function Application() {
         { path: "/auth/login", index: false, name: "Login", authed: false, always: false, component: (<Login />), icon: Password, sub: [] },
         { path: "/auth/logout", index: false, name: "Logout", authed: true, always: false, component: (<Logout />), icon: Lock, sub: [] },
         { path: "/users", index: false, name: "Users", authed: true, always: false, component: (<Users />), icon: People, sub: [
-            { path: "add", index: false, component: (<UsersAdd />) },
+            { path: "add", index: false, component: (<ModalPage color="success" title="Add User" icon={People} closenav="/users" element={UsersAdd} />) },
             { path: "edit/:id", index: false, component: (<UsersEdit />) },
-            { path: "delete/:id", index: false, component: (<UsersDelete />) }
+            { path: "delete/:id", index: false, component: (<ModalPage color="danger" title="Delete User" icon={Error} closenav="/users" element={UsersDelete} />) }
         ] },
         { path: "/api", index: false, name: "Django: API", authed: false, always: true, component: null, icon: Settings, sub: [] },
         { path: "/admin", index: false, name: "Django: Admin", authed: false, always: true, component: null, icon: Shield, sub: [] },
