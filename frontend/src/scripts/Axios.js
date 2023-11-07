@@ -3,9 +3,9 @@ import _ from 'lodash';
 import { ClearAccessToken, ClearTokens, GetAccessToken, GetRefreshToken, SetAccessToken, TokenType } from './TokenManager';
 
 function IsTokenError(error) {
-    if (_.has(error, "response.data.code")) {
-        if (_.has(error, "response.data.messages")) {
-            return (error.response.data.code === "token_not_valid" && error.response.data.messages[0].token_type === "access");
+    if (_.has(error, "response.data.data[0].code")) {
+        if (_.has(error, "response.data.data[0].messages")) {
+            return (error.response.data.data[0].code === "token_not_valid" && error.response.data.data[0].messages[0].token_type === "access");
         }
     }
 
@@ -47,8 +47,8 @@ function AxiosClient() {
                     location.href = `/auth/login?redirect=${encodeURI(location.pathname)}`;
                 }
 
-                if (_.has(retval, "data.access")) {
-                    SetAccessToken(TokenType(), retval.data.access);
+                if (_.has(retval, "data.data[0].access")) {
+                    SetAccessToken(TokenType(), retval.data.data[0].access);
 
                     return new_axios(config);
                 }

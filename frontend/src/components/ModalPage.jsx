@@ -1,3 +1,4 @@
+import React from 'react';
 import { Modal, ModalDialog, DialogTitle, ModalClose, Divider } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
 
@@ -25,9 +26,10 @@ export default function ModalPage({ color, title, icon, path, children, ...props
                 </DialogTitle>
                 <Divider />
                 {elements.map((child, index) => {
-                    const Child = child;
-
-                    return <Child key={`modalchild-${index}-${child.type}`} color={color || primary} onClose={CloseEvent} {...props} />
+                    if (typeof child === "function")
+                        return React.createElement(child, { key: `modalchild-${index}-${child.type}`, color: color || "primary", onClose: CloseEvent, ...props })
+                    else
+                        return React.cloneElement(child, { key: `modalchild-${index}-${child.type}`, color: color || "primary", onClose: CloseEvent, ...props })
                 })}
             </ModalDialog>
         </Modal>

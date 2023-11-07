@@ -138,7 +138,7 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ALL_ORIGINS = True
 
 # djangorestframework
-DEFAULT_RENDERER_CLASSES = [ 'rest_framework.renderers.JSONRenderer' ]
+DEFAULT_RENDERER_CLASSES = [ 'core.renderers.JSONAPIRenderer', 'rest_framework.renderers.JSONRenderer' ]
 
 if DEBUG:
     DEFAULT_RENDERER_CLASSES.append('rest_framework.renderers.BrowsableAPIRenderer')

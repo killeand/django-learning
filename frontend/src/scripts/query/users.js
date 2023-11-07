@@ -3,7 +3,7 @@ import { Axios } from "../Axios";
 
 export const ListUsers = {
     queryKey: ['users'],
-    queryFn: () => Axios.get("/api/users").then((resp) => resp.data),
+    queryFn: () => Axios.get("/api/users").then((resp) => resp.data.data),
     staleTime: 5 * 60 * 1000
 };
 
@@ -15,7 +15,7 @@ export const RetrieveUser = (uid) => {
 }
 
 export const CreateUsers = (callbackFn) => ({
-    mutationFn: (userData) => Axios.post("/api/users/", userData).then((resp) => resp.data),
+    mutationFn: (userData) => Axios.post("/api/users/", userData).then((resp) => resp.data.data[0]),
     onMutate: () => {
         TanQuery.invalidateQueries({ queryKey: ['users'] });
         if (callbackFn) callbackFn();
@@ -27,7 +27,7 @@ export const CreateUsers = (callbackFn) => ({
 });
 
 export const UpdateUsers = (callbackFn) => ({
-    mutationFn: (userData) => Axios.patch("/api/users/" + userData.id + "/", userData).then((resp) => resp.data),
+    mutationFn: (userData) => Axios.patch("/api/users/" + userData.id + "/", userData).then((resp) => resp.data.data[0]),
     onMutate: () => {
         TanQuery.invalidateQueries({ queryKey: ['users'] });
         if (callbackFn) callbackFn();

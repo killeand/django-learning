@@ -34,9 +34,9 @@ export default function Page() {
         Axios.post("/api/token", {email:email,password:pass})
             .then(({ data }) => {
                 let storageType = (loginType) ? localStorage : sessionStorage;
-                let token = jwtdecode(data.refresh);
-                SetAccessToken(storageType, data.access);
-                SetRefreshToken(storageType, data.refresh);
+                let token = jwtdecode(data.data[0].refresh);
+                SetAccessToken(storageType, data.data[0].access);
+                SetRefreshToken(storageType, data.data[0].refresh);
 
                 context.setUser({
                     id: token.user_id,
