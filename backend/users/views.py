@@ -3,7 +3,8 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelM
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .permissions import UserPermission
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, ListUserSerializer
+from .serializers import UserSerializer, ListUserSerializer, SectionSerializer, ServiceGroupSerializer
+from .models import Sections, ServiceGroups
 from django.http import JsonResponse
 
 class UserView(ModelViewSet):
@@ -14,9 +15,33 @@ class UserView(ModelViewSet):
         user = self.request.user
         
         if user.is_staff:
-            return get_user_model().objects.all()
+            return get_user_model().objects.all().prefetch_related('sections')
         else:
-            return get_user_model().objects.filter(id=user.id)
+            return get_user_model().objects.filter(id=user.id).prefetch_related('sections')
+
+class SectionView(ModelViewSet):
+    serializer_class = SectionSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        #sections = user.objects.select_related('sections')
+        print("SECTIONS LIST")
+        print(user.sections)
+        
+        return Sections.objects.all()
+        
+        # if user.is_staff:
+        #     return Sections.objects.all()
+        # else:
+        #     return Sections.objects.filter(id__in=[user.sections])
+
+class ServiceGroupView(ModelViewSet):
+    serializer_class = ServiceGroupSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return ServiceGroups.objects.filter(id__in=self.request.user.service_groups)
 
 # class ListUserView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 #     serializer_class = ListUserSerializer

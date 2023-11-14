@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import Sections, ServiceGroups
 
 class UserSerializer(ModelSerializer):
     password = CharField(write_only=True)
@@ -36,3 +37,13 @@ class DetailedTokenPairSerializer(TokenObtainPairSerializer):
         }
         
         return token
+    
+class SectionSerializer(ModelSerializer):
+    class Meta:
+        model = Sections
+        fields = '__all__'
+        
+class ServiceGroupSerializer(ModelSerializer):
+    class Meta:
+        model = ServiceGroups
+        fields = "__all__"

@@ -1,7 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from typing import AnyStr, Any, ClassVar
-from typing_extensions import Literal, Self
 import uuid
 from .managers import UserManager
 
@@ -12,7 +10,7 @@ class TermEnum(models.IntegerChoices):
 
 class Sections(models.Model):
     def __str__(self):
-        return "<Sections> = " + self.name
+        return str(self.year) + "-" + str(self.term) + "-" + self.learn_id
     
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.TextField()
@@ -27,7 +25,7 @@ class Sections(models.Model):
 
 class ServiceGroups(models.Model):
     def __str__(self):
-        return "<ServiceGroups> = " + self.name
+        return self.name
     
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.TextField()
@@ -39,13 +37,13 @@ class ServiceGroups(models.Model):
         
 class UserModel(AbstractUser):
     def __str__(self):
-        return "<UserModel object> = " + self.email
+        return self.email
     
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     email = models.EmailField(unique=True, max_length=255, default='')
     username = None
-    sections = models.ManyToManyField(Sections)
-    service_groups = models.ManyToManyField(ServiceGroups)
+    sections = models.ManyToManyField(Sections, blank=True)
+    service_groups = models.ManyToManyField(ServiceGroups, blank=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [ 'password' ]
