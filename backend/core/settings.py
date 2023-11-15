@@ -139,17 +139,17 @@ CORS_ALLOWED_ALL_ORIGINS = True
 
 # djangorestframework
 DEFAULT_RENDERER_CLASSES = [ 'core.renderers.JSONAPIRenderer', 'rest_framework.renderers.JSONRenderer' ]
+DEFAULT_AUTH_CLASSES = [ 'rest_framework_simplejwt.authentication.JWTAuthentication' ]
 
 if DEBUG:
     DEFAULT_RENDERER_CLASSES.append('rest_framework.renderers.BrowsableAPIRenderer')
+    DEFAULT_AUTH_CLASSES.append('rest_framework.authentication.SessionAuthentication')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions'
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': DEFAULT_AUTH_CLASSES,
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES,
 }
 

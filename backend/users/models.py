@@ -1,4 +1,6 @@
+from __future__ import annotations
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 from django.db import models
 import uuid
 from .managers import UserManager
@@ -17,6 +19,7 @@ class Sections(models.Model):
     learn_id = models.TextField()
     term = models.IntegerField(choices=TermEnum.choices)
     year = models.IntegerField()
+    users = models.ManyToManyField('UserModel', blank=True, related_name='section_users')
     
     class Meta:
         db_table = "Sections"
@@ -42,7 +45,7 @@ class UserModel(AbstractUser):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     email = models.EmailField(unique=True, max_length=255, default='')
     username = None
-    sections = models.ManyToManyField(Sections, blank=True)
+    sections = models.ManyToManyField(Sections, blank=True, related_name='user_sections')
     service_groups = models.ManyToManyField(ServiceGroups, blank=True)
     
     USERNAME_FIELD = 'email'
